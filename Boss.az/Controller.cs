@@ -214,7 +214,6 @@ namespace Boss.az
                                    from v in e.Vacancies
                                    where v.Id == result
                                    select v;
-                    //vacancy1.ToList();
                     Vacancy vacancyResult = new Vacancy();
                     foreach (var vacancy in vacancy1)
                     {
