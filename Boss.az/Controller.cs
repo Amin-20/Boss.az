@@ -174,8 +174,66 @@ namespace Boss.az
                 }
                 else if (select == "2")
                 {
-                    employers.ForEach(e => e.Vacancies.ForEach(v => v.ShowVacancy()));
-                    Console.ReadKey();
+                    //employers.ForEach(e => e.Vacancies.ForEach(v => v.ShowVacancy()));
+                    string search = String.Empty;
+                    int result;
+                    while (true)
+                    {
+                        var letter = Console.ReadKey();
+                        if (letter.Key == ConsoleKey.D1 || letter.Key == ConsoleKey.D2 ||
+                            letter.Key == ConsoleKey.D3 || letter.Key == ConsoleKey.D4 ||
+                            letter.Key == ConsoleKey.D5 || letter.Key == ConsoleKey.D6 ||
+                            letter.Key == ConsoleKey.D7 || letter.Key == ConsoleKey.D8 ||
+                            letter.Key == ConsoleKey.D9 || letter.Key == ConsoleKey.D0)
+                        {
+                            var result1 = letter.Key.ToString();
+                            result1 = result1.Replace('D', ' ');
+                            result = int.Parse(result1);
+                            break;
+                        }
+                        Console.Clear();
+                        search += letter.KeyChar;
+                        search = search.ToLower();
+                        if (letter.Key == ConsoleKey.Backspace)
+                        {
+                            search = "";
+                        }
+                        Console.WriteLine(search);
+                        var selectedVacancy = from e in employers
+                                              from v in e.Vacancies
+                                              where v.Speciality.ToLower().Contains(search)
+                                              select v;
+                        foreach (var vacancy in selectedVacancy)
+                        {
+                            Console.WriteLine($"{vacancy.Id} - {vacancy.Speciality}");
+                        }
+                        Console.WriteLine("\n\n");
+                    }
+                    Console.Clear();
+                    var vacancy1 = from e in employers
+                                   from v in e.Vacancies
+                                   where v.Id == result
+                                   select v;
+                    //vacancy1.ToList();
+                    Vacancy vacancyResult = new Vacancy();
+                    foreach (var vacancy in vacancy1)
+                    {
+                        vacancyResult = vacancy;
+                    }
+                    vacancyResult.ShowVacancy();
+                    Console.WriteLine("[1] Apply");
+                    Console.WriteLine("[2] Back");
+                    Console.Write("Select : ");
+                    var select1 = Console.ReadLine();
+                    if (select1 == "1")
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        Console.WriteLine("Request sent successfully");
+                        Console.ResetColor();
+                        Console.ReadKey();
+                    }
+                    else if (select == "2") { }
+
                 }
                 else if (select == "3")
                 {
@@ -537,7 +595,7 @@ namespace Boss.az
                     var speciality = Console.ReadLine();
                     Console.Write("Enter salary : ");
                     var salary = double.Parse(Console.ReadLine());
-                    Console.WriteLine("Enter experience year : ");
+                    Console.Write("Enter experience year : ");
                     var experienceYear = int.Parse(Console.ReadLine());
                     Vacancy v1 = new Vacancy(speciality, salary, experienceYear);
                     employer.Vacancies.Add(v1);
@@ -545,10 +603,10 @@ namespace Boss.az
                 else if (select == "3")
                 {
                     employer.Vacancies.ForEach(v => v.ShowVacancy());
-                    Console.WriteLine("Enter vacancy id : ");
+                    Console.Write("Enter vacancy id : ");
                     var id = int.Parse(Console.ReadLine());
-                    var employer1 = employer.GetVacancyById(id);
-                    if (employer1 != null)
+                    var vacancy = employer.GetVacancyById(id);
+                    if (vacancy != null)
                     {
                         Console.WriteLine("[1] Speciality");
                         Console.WriteLine("[2] Salary");
@@ -557,15 +615,36 @@ namespace Boss.az
                         var choise = Console.ReadLine();
                         if (choise == "1")
                         {
-                            Console.WriteLine("Enter new speciality : ");
-                            var speciality=Console.ReadLine();
-
+                            Console.Write("Enter new speciality : ");
+                            var speciality = Console.ReadLine();
+                            vacancy.Speciality = speciality;
                         }
-
+                        else if (choise == "2")
+                        {
+                            Console.Write("Enetr new salary : ");
+                            var salary = double.Parse(Console.ReadLine());
+                            vacancy.Salary = salary;
+                        }
+                        else if (choise == "3")
+                        {
+                            Console.Write("Enter new experience year : ");
+                            var experienceYear = int.Parse(Console.ReadLine());
+                            vacancy.PractiseYear = experienceYear;
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write("Invalid select !");
+                            Console.ResetColor();
+                            Console.ReadKey();
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("Vacancy not found");
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.Write("Vacancy not found");
+                        Console.ResetColor();
+                        Console.ReadKey();
                     }
                 }
                 else if (select == "4")
@@ -620,102 +699,103 @@ namespace Boss.az
             {
                 Console.Clear();
                 SiteName();
-                Console.WriteLine("\n\t\t\t\t\t\t[1] Login ");
-                Console.WriteLine("\n\t\t\t\t\t\t[2] SignUp ");
-                Console.Write("\n\t\t\t\t\t\tSelect : ");
-                string choise = Console.ReadLine();
-                if (choise == "1")
-                {
-                    Console.Write("\n\t\t\t\t\t\tEnter username : ");
-                    string username = Console.ReadLine();
-                    Console.Write("\n\t\t\t\t\t\tEnter password : ");
-                    string password = Console.ReadLine();
-                    Worker worker = null;
-                    Employer employer = null;
-                    for (int i = 0; i < workers.Count; i++)
-                    {
-                        if (username == workers[i].Username && password == workers[i].Password)
-                        {
-                            worker = workers[i];
-                        }
-                    }
-                    for (int i = 0; i < employers.Count; i++)
-                    {
-                        if (username == employers[i].Username && password == employers[i].Password)
-                        {
-                            employer = employers[i];
-                        }
-                    }
-                    if (worker != null)
-                    {
-                        Worker(worker, employers);
-                    }
-                    else if (employer != null)
-                    {
-                        Employer(employer);
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("\n\t\t\t\t\t\tUser not found. Please try again !");
-                        Console.ResetColor();
-                        Console.ReadKey();
-                    }
-                }
-                else if (choise == "2")
-                {
-                    Console.WriteLine("\n\t\t\t\t\t\t[1] Worker");
-                    Console.WriteLine("\n\t\t\t\t\t\t[2] Employer");
-                    var select1 = Console.ReadLine();
-                    if (select1 == "1")
-                    {
-                        Console.Write("Enter name : ");
-                        var name = Console.ReadLine();
-                        Console.Write("Enter surname : ");
-                        var surname = Console.ReadLine();
-                        Console.Write("Age : ");
-                        var age = int.Parse(Console.ReadLine());
-                        Console.Write("Enter city : ");
-                        var city = Console.ReadLine();
-                        Console.Write("Enter phone number : ");
-                        var phone = Console.ReadLine();
-                        Console.Write("Enter username : ");
-                        var username = Console.ReadLine();
-                        Console.Write("Creat password : ");
-                        var password = Console.ReadLine();
-                        Worker worker1 = new Worker(username, password, name, surname, city, phone, age);
-                        Console.WriteLine("Do you want add CV ?");
-                        Console.WriteLine("[1] Yes");
-                        Console.WriteLine("[2] No");
-                        var choise1 = Console.ReadLine();
-                        if (choise1 == "1")
-                        {
-                            CreatCv(worker1);
-                        }
-                        workers.Add(worker1);
-                    }
-                    else if (select1 == "2")
-                    {
-                        Console.Write("Enter name : ");
-                        var name = Console.ReadLine();
-                        Console.Write("Enter surname : ");
-                        var surname = Console.ReadLine();
-                        Console.Write("Age : ");
-                        var age = int.Parse(Console.ReadLine());
-                        Console.Write("Enter city : ");
-                        var city = Console.ReadLine();
-                        Console.Write("Enter phone number : ");
-                        var phone = Console.ReadLine();
-                        Console.Write("Enter username : ");
-                        var username = Console.ReadLine();
-                        Console.Write("Creat password : ");
-                        var password = Console.ReadLine();
-                        Employer employer = new Employer(username, password, name, surname, city, phone, age);
-                        employers.Add(employer);
-                    }
-                    Console.WriteLine("User added succesfully ! ");
-                    Console.ReadKey();
-                }
+                Worker(workers[0], employers);
+                //Console.WriteLine("\n\t\t\t\t\t\t[1] Login ");
+                //Console.WriteLine("\n\t\t\t\t\t\t[2] SignUp ");
+                //Console.Write("\n\t\t\t\t\t\tSelect : ");
+                //string choise = Console.ReadLine();
+                //if (choise == "1")
+                //{
+                //    Console.Write("\n\t\t\t\t\t\tEnter username : ");
+                //    string username = Console.ReadLine();
+                //    Console.Write("\n\t\t\t\t\t\tEnter password : ");
+                //    string password = Console.ReadLine();
+                //    Worker worker = null;
+                //    Employer employer = null;
+                //    for (int i = 0; i < workers.Count; i++)
+                //    {
+                //        if (username == workers[i].Username && password == workers[i].Password)
+                //        {
+                //            worker = workers[i];
+                //        }
+                //    }
+                //    for (int i = 0; i < employers.Count; i++)
+                //    {
+                //        if (username == employers[i].Username && password == employers[i].Password)
+                //        {
+                //            employer = employers[i];
+                //        }
+                //    }
+                //    if (worker != null)
+                //    {
+                //        Worker(worker, employers);
+                //    }
+                //    else if (employer != null)
+                //    {
+                //        Employer(employer);
+                //    }
+                //    else
+                //    {
+                //        Console.ForegroundColor = ConsoleColor.Red;
+                //        Console.WriteLine("\n\t\t\t\t\t\tUser not found. Please try again !");
+                //        Console.ResetColor();
+                //        Console.ReadKey();
+                //    }
+                //}
+                //else if (choise == "2")
+                //{
+                //    Console.WriteLine("\n\t\t\t\t\t\t[1] Worker");
+                //    Console.WriteLine("\n\t\t\t\t\t\t[2] Employer");
+                //    var select1 = Console.ReadLine();
+                //    if (select1 == "1")
+                //    {
+                //        Console.Write("Enter name : ");
+                //        var name = Console.ReadLine();
+                //        Console.Write("Enter surname : ");
+                //        var surname = Console.ReadLine();
+                //        Console.Write("Age : ");
+                //        var age = int.Parse(Console.ReadLine());
+                //        Console.Write("Enter city : ");
+                //        var city = Console.ReadLine();
+                //        Console.Write("Enter phone number : ");
+                //        var phone = Console.ReadLine();
+                //        Console.Write("Enter username : ");
+                //        var username = Console.ReadLine();
+                //        Console.Write("Creat password : ");
+                //        var password = Console.ReadLine();
+                //        Worker worker1 = new Worker(username, password, name, surname, city, phone, age);
+                //        Console.WriteLine("Do you want add CV ?");
+                //        Console.WriteLine("[1] Yes");
+                //        Console.WriteLine("[2] No");
+                //        var choise1 = Console.ReadLine();
+                //        if (choise1 == "1")
+                //        {
+                //            CreatCv(worker1);
+                //        }
+                //        workers.Add(worker1);
+                //    }
+                //    else if (select1 == "2")
+                //    {
+                //        Console.Write("Enter name : ");
+                //        var name = Console.ReadLine();
+                //        Console.Write("Enter surname : ");
+                //        var surname = Console.ReadLine();
+                //        Console.Write("Age : ");
+                //        var age = int.Parse(Console.ReadLine());
+                //        Console.Write("Enter city : ");
+                //        var city = Console.ReadLine();
+                //        Console.Write("Enter phone number : ");
+                //        var phone = Console.ReadLine();
+                //        Console.Write("Enter username : ");
+                //        var username = Console.ReadLine();
+                //        Console.Write("Creat password : ");
+                //        var password = Console.ReadLine();
+                //        Employer employer = new Employer(username, password, name, surname, city, phone, age);
+                //        employers.Add(employer);
+                //    }
+                //    Console.WriteLine("User added succesfully ! ");
+                //    Console.ReadKey();
+                //}
             }
         }
     }

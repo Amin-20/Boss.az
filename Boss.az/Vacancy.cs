@@ -16,6 +16,10 @@ namespace Boss.az
             PractiseYear = practiseYear;
         }
 
+        public Vacancy()
+        {
+                
+        }
         public string Speciality { get; set; }
         public double Salary { get; set; }
         public int PractiseYear { get; set; }
@@ -28,7 +32,7 @@ namespace Boss.az
             Console.WriteLine($"\nID : {Id}");
             Console.WriteLine($"Speciality : {Speciality}");
             Console.WriteLine($"Salary : {Salary} $");
-            Console.WriteLine($"Experience year : {PractiseYear}");
+            Console.WriteLine($"Experience year : {PractiseYear}\n");
         }
     }
 }
