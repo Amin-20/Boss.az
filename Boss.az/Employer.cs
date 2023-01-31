@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Boss.az
@@ -22,6 +23,11 @@ namespace Boss.az
         public string Password { get; set; }
         public List<Vacancy> Vacancies { get; set; } = new List<Vacancy>();
         public List<Worker> Workers { get; set; } = null;
+        public static int Count { get; set; }
+        public Notification Notifications { get; set; }= new Notification();
+        public List<Worker> Applicant { get; set; } = new List<Worker>();
+        public List<Vacancy> ApplicantVacancy { get; set; } = new List<Vacancy>();
+
         public new void Show()
         {
             Console.WriteLine($"Id : {Id}");
@@ -38,6 +44,6 @@ namespace Boss.az
                 }
             }
             return null;
-        }    
+        }
     }
 }

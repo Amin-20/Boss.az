@@ -178,7 +178,6 @@ namespace Boss.az
                 }
                 else if (select == "2")
                 {
-                    //employers.ForEach(e => e.Vacancies.ForEach(v => v.ShowVacancy()));
                     string search = String.Empty;
                     int result;
                     while (true)
@@ -230,15 +229,25 @@ namespace Boss.az
                     var select1 = Console.ReadLine();
                     if (select1 == "1")
                     {
-
-                        //employers
+                        for (int i = 0; i < employers.Count; i++)
+                        {
+                            for (int k = 0; k < employers[i].Vacancies.Count; k++)
+                            {
+                                if (result == employers[i].Vacancies[k].Id)
+                                {
+                                    employers[i].Notifications.Count += 1;
+                                    employers[i].Applicant.Add(worker);
+                                    employers[i].ApplicantVacancy.Add(vacancyResult);
+                                }
+                            }
+                        }
+                        Notification notification = new Notification();
                         Console.ForegroundColor = ConsoleColor.DarkGreen;
                         Console.WriteLine("Request sent successfully");
                         Console.ResetColor();
                         Console.ReadKey();
                     }
                     else if (select == "2") { }
-
                 }
                 else if (select == "3")
                 {
@@ -560,7 +569,22 @@ namespace Boss.az
                 }
                 else if (select == "5")
                 {
-
+                    if (worker.Applicant.Count != 0)
+                    {
+                        worker.Applicant.ForEach(e => e.Show());
+                        worker.ApplicantVacancy.ForEach(v => v.ShowVacancy());
+                        Console.WriteLine(worker.Notification.Content);
+                        Console.ReadKey();
+                        worker.Applicant.Clear();
+                        worker.ApplicantVacancy.Clear();
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("There is no information.");
+                        Console.ResetColor();
+                        Console.ReadKey();
+                    }
                 }
                 else if (select == "6")
                 {
@@ -637,21 +661,21 @@ namespace Boss.az
                             Console.Write("Enter new speciality : ");
                             var speciality = Console.ReadLine();
                             vacancy.Speciality = speciality;
-                      
+
                         }
                         else if (choise == "2")
                         {
                             Console.Write("Enetr new salary : ");
                             var salary = double.Parse(Console.ReadLine());
                             vacancy.Salary = salary;
-                       
+
                         }
                         else if (choise == "3")
                         {
                             Console.Write("Enter new experience year : ");
                             var experienceYear = int.Parse(Console.ReadLine());
                             vacancy.PractiseYear = experienceYear;
-                            
+
                         }
                         else
                         {
@@ -672,28 +696,56 @@ namespace Boss.az
                 }
                 else if (select == "4")
                 {
-                    if (employer.Workers != null)
+                    if (employer.Applicant.Count != 0)
                     {
-                        for (int i = 0; i < employer.Workers.Count; i++)
+                        Vacancy vacancy = new Vacancy();
+                        var result1 = employer.ApplicantVacancy.Select(v => v);
+                        foreach (var v in result1)
                         {
-                            employer.Workers[i].Show();
-                            employer.Workers[i].ShowCv();
-                            Console.WriteLine();
+                            vacancy = v;
                         }
-                        Console.Write("Enter the id of the gender you want to accept : ");
-                        var id = int.Parse(Console.ReadLine());
-                        Console.WriteLine("Send message : ");
-                        var message = Console.ReadLine();
-                        employer.Workers[id - 1].SendingRequest = message;
-                        for (int i = 0; i < employer.Workers.Count; i++)
+                        employer.Applicant.ForEach(w => w.Show());
+                        employer.Applicant.ForEach(w => w.ShowCv());
+                        employer.ApplicantVacancy.ForEach(v => v.ShowVacancy());
+                        Console.WriteLine("[1] Accept");
+                        Console.WriteLine("[2] Reject");
+                        Console.Write("Select : ");
+                        var choise = Console.ReadLine();
+                        if (choise == "1")
                         {
-                            if (employer.Workers[i] != employer.Workers[id - 1])
+                            Worker worker = null;
+                            var result = employer.Applicant.Select(w => w);
+                            foreach (var w in result)
                             {
-                                employer.Workers[i].SendingRequest = "You didn't get the job";
+                                worker = w;
                             }
+                            worker.Applicant.Add(employer);
+                            worker.ApplicantVacancy.Add(vacancy);
+                            worker.Notification.Content = "Was accepted";
+                            Console.ForegroundColor= ConsoleColor.Green;
+                            Console.WriteLine("Message sended");
+                            Console.ResetColor();
+                            Console.ReadKey();
+                            employer.Applicant.Clear();
+                            employer.ApplicantVacancy.Clear();
+                            employer.Vacancies.Remove(vacancy);
+                            FileHelper.WriteJsonEmployer(employers);
                         }
-                        employer.Workers = null;
-                        employer.Workers.Clear();
+                        else if (choise == "2")
+                        {
+                            Worker worker = null;
+                            var result = employer.Applicant.Select(w => w);
+                            foreach (var w in result)
+                            {
+                                worker = w;
+                            }
+                            worker.Applicant.Add(employer);
+                            worker.ApplicantVacancy.Add(vacancy);
+                            worker.Notification.Content = "Was rejected";
+                            Console.ReadKey();
+                            employer.Applicant.Clear();
+                            employer.ApplicantVacancy.Clear();
+                        }
                     }
                     else
                     {

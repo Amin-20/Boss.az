@@ -14,7 +14,10 @@ namespace Boss.az
         public CV Cv { get; set; } = null;
         public string Username { get; set; }
         public string Password { get; set; }
-        public string SendingRequest { get; set; }
+        public Notification Notification { get; set; } = new Notification();
+        public List<Employer> Applicant { get; set; } = new List<Employer>();
+        public List<Vacancy> ApplicantVacancy { get; set; } = new List<Vacancy>();
+
         public Worker(string username, string pass, string name, string surname, string city, string phone, int age)
             : base(name, surname, city, phone, age)
         {
