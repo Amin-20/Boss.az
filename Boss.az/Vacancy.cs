@@ -20,6 +20,8 @@ namespace Boss.az
         {
                 
         }
+
+
         public string Speciality { get; set; }
         public double Salary { get; set; }
         public int PractiseYear { get; set; }

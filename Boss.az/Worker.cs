@@ -14,6 +14,7 @@ namespace Boss.az
         public CV Cv { get; set; } = null;
         public string Username { get; set; }
         public string Password { get; set; }
+        public string SendingRequest { get; set; }
         public Worker(string username, string pass, string name, string surname, string city, string phone, int age)
             : base(name, surname, city, phone, age)
         {

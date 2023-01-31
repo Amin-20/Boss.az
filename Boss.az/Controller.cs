@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Boss.az
@@ -184,7 +185,7 @@ namespace Boss.az
                             letter.Key == ConsoleKey.D3 || letter.Key == ConsoleKey.D4 ||
                             letter.Key == ConsoleKey.D5 || letter.Key == ConsoleKey.D6 ||
                             letter.Key == ConsoleKey.D7 || letter.Key == ConsoleKey.D8 ||
-                            letter.Key == ConsoleKey.D9 || letter.Key == ConsoleKey.D0)
+                            letter.Key == ConsoleKey.D9)
                         {
                             var result1 = letter.Key.ToString();
                             result1 = result1.Replace('D', ' ');
@@ -226,6 +227,8 @@ namespace Boss.az
                     var select1 = Console.ReadLine();
                     if (select1 == "1")
                     {
+                        
+                        //employers
                         Console.ForegroundColor = ConsoleColor.DarkGreen;
                         Console.WriteLine("Request sent successfully");
                         Console.ResetColor();
@@ -648,6 +651,36 @@ namespace Boss.az
                 }
                 else if (select == "4")
                 {
+                    if (employer.Workers != null)
+                    {
+                        for (int i = 0; i < employer.Workers.Count; i++)
+                        {
+                            employer.Workers[i].Show();
+                            employer.Workers[i].ShowCv();
+                            Console.WriteLine();
+                        }
+                        Console.Write("Enter the id of the gender you want to accept : ");
+                        var id = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Send message : ");
+                        var message = Console.ReadLine();
+                        employer.Workers[id - 1].SendingRequest = message;
+                        for (int i = 0; i < employer.Workers.Count; i++)
+                        {
+                            if (employer.Workers[i] != employer.Workers[id - 1])
+                            {
+                                employer.Workers[i].SendingRequest = "You didn't get the job";
+                            }
+                        }
+                        employer.Workers = null;
+                        employer.Workers.Clear();
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("There is no information.");
+                        Console.ResetColor();
+                        Console.ReadKey();
+                    }
 
                 }
                 else if (select == "5")
@@ -685,7 +718,7 @@ namespace Boss.az
             workers.Add(w1);
             workers.Add(w2);
             workers.Add(w3);
-            //FileHelper.WriteJsonWorker(workers);
+            FileHelper.WriteJsonWorker(workers);
             workers = FileHelper.ReadJsonWorker();
 
             List<Employer> employers = new List<Employer>();

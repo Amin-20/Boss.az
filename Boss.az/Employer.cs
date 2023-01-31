@@ -21,6 +21,7 @@ namespace Boss.az
         public string Username { get; set; }
         public string Password { get; set; }
         public List<Vacancy> Vacancies { get; set; } = new List<Vacancy>();
+        public List<Worker> Workers { get; set; } = null;
         public new void Show()
         {
             Console.WriteLine($"Id : {Id}");
