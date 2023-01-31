@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Boss.az
 {
-    class Vacancy
+     public class Vacancy
     {
         public Vacancy(string speciality, double salary, int practiseYear)
         {

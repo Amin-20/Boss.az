@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Boss.az
 {
-    class Employer : Human
+    public class Employer : Human
     {
         public Employer(string username, string pass, string name, string surname, string city, string phone, int age)
             : base(name, surname, city, phone, age)

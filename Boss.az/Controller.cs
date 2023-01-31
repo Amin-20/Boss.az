@@ -685,6 +685,8 @@ namespace Boss.az
             workers.Add(w1);
             workers.Add(w2);
             workers.Add(w3);
+            //FileHelper.WriteJsonWorker(workers);
+            workers = FileHelper.ReadJsonWorker();
 
             List<Employer> employers = new List<Employer>();
             Employer em1 = new Employer("raf1", "raf1", "Rafiq", "Agayev", "Baku", "+994555555555", 45);
@@ -693,6 +695,7 @@ namespace Boss.az
             em1.Vacancies.Add(new Vacancy("Junior Java Developer", 1200, 1));
             employers.Add(em1);
             employers.Add(em2);
+            //FileHelper.WriteJsonEmployer(employers);
 
             while (true)
             {
